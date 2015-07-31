@@ -3,14 +3,7 @@
  */
 package mvc;
 
-import java.net.UnknownHostException;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-
 import com.mongodb.MongoClient;
-
-import java.net.*;
 
 /**
  * @author ritesh.varyani
@@ -18,29 +11,27 @@ import java.net.*;
  */
 public class CheckForConnection {
 
-	private boolean dbConnect=false;
-	MongoClient mongo;
-	public boolean isConnected()
-	{
+	private boolean dbConnect = false;
+	private MongoClient mongo;
+
+	public boolean isConnected() {
 		return dbConnect;
 	}
-	
-	public void makeConnection() throws UnknownHostException
-	{
-		try
-		{
-		System.out.println("@@@");
-			mongo= new MongoClient();
-			System.out.println("111111111111111111111111111111111111");
-
-		}
-		catch(Exception e)
-		{
-		
-			System.out.println("%%%"+e);
-		}
-		if(mongo!=null)
-			dbConnect=true;
+	public MongoClient getClient() {
+		return mongo;
 	}
-	
+	public MongoClient makeConnection() {
+		try {
+			mongo = new MongoClient();
+		} catch (Exception e) {
+			return null;
+		}
+		dbConnect = true;
+		return getClient();
+	}
+
+	public void closeConnection() {
+		dbConnect = false;
+		mongo = null;
+	}
 }

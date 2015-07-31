@@ -1,36 +1,32 @@
 package mvc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
-//import com.mongodb.client.MongoCollection;
-//import com.mongodb.client.MongoDatabase;
-//import com.mongodb;
 
 public class MongoDatabaseInfo {
-
-public void addToDatabase()    
-{}
-	
-	
-//	public static void main(String[] args) throws Exception {
-//
-//    	
-//    	
-//    	//           MongoClient mongo= new MongoClient();
-////           
-////           DB db= mongo.getDB("UserInfo");
-////           
-////           DBCollection userInfo = db.getCollection("userInfo");
-////        
-////           userInfo.insert(new BasicDBObject().append("name","Ritesh"));
-//        
-//          //System.out.println(userInfo.find());
-//    }
-    
+	public boolean addToDatabase(String firstName, String lastName, String gender, String phone, String email,
+			CheckForConnection mongoConnect, MongoClient mongo) {
+		if (!mongoConnect.isConnected()) {
+			return false;
+		} else {
+			try {
+				DB db = mongo.getDB("UserInfo");
+				DBCollection userInfo = db.getCollection("userInfo");
+				userInfo.insert(new BasicDBObject("firstName", firstName).append("lastName", lastName)
+						.append("gender",gender).append("phone", phone).append("email", email));
+				System.out.println(userInfo.findOne());
+				System.out.println(userInfo.getCount());
+				DBCursor cursor=userInfo.find();
+				while(cursor.hasNext()) {
+				       System.out.println(cursor.next());
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
